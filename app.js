@@ -75,6 +75,8 @@ app.get('/obtenerTotalConfesiones', (req, res) => {
 
 // Ruta para manejar la publicación del formulario
 app.post('/confesion', upload.array('file'), (req, res) => {
+
+  
   const descripcion = req.body.descripcion;
   const titulo = req.body.titulo;
   const imagenes = req.files ? req.files.map(file => file.filename) : [];
@@ -86,6 +88,8 @@ app.post('/confesion', upload.array('file'), (req, res) => {
 
   res.redirect('/');
   folderName = null;
+
+
 });
 
 app.get('/post', (req,res)=>{
@@ -127,10 +131,6 @@ app.get('/post/:postId', (req, res) => {
 
 
 const ejsContent = fs.readFileSync(path.join(__dirname, 'views', 'index.ejs'), 'utf-8');
-// Renderiza tu archivo EJS a HTML
-
-// Escribe el contenido HTML en un nuevo archivo index.html en la carpeta public
-
 
 // Inicia el servidor en el puerto especificado
 app.listen(PORT, () => {

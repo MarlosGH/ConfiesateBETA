@@ -32,4 +32,3 @@ if(imgs.length == 0){
 }
 
 images[0].classList.add('active');
-

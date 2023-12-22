@@ -7,7 +7,7 @@ window.addEventListener('resize', shadowIcons);
 function shadowIcons() {
     const icon = document.querySelectorAll('.fa-solid');
     icon.forEach(i => {
-        i.style.display = window.innerWidth < 304 ? 'none' : 'block';
+        i.style.display = window.innerWidth < 348 ? 'none' : 'block';
     });
 }
 
