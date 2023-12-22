@@ -127,17 +127,9 @@ app.get('/post/:postId', (req, res) => {
 
 
 const ejsContent = fs.readFileSync(path.join(__dirname, 'views', 'index.ejs'), 'utf-8');
-const data = {
-  confesiones: rows, // Tus confesiones aquí
-  basePath: '/prv/uploads' // Tu basePath aquí
-};
 // Renderiza tu archivo EJS a HTML
-const htmlContent = ejs.render(ejsContent, data);
 
 // Escribe el contenido HTML en un nuevo archivo index.html en la carpeta public
-fs.writeFileSync('./public/index.html', htmlContent);
-
-fs.writeFileSync(path.join(__dirname, 'public', 'index.html'), htmlContent);
 
 
 // Inicia el servidor en el puerto especificado
