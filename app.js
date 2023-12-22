@@ -24,13 +24,11 @@ const storage = multer.diskStorage({
     }
     const destinationFolder = path.join(__dirname, 'uploads', folderName);
     fs.mkdirSync(destinationFolder, { recursive: true });
-    console.log('Destination Folder:', destinationFolder);
     cb(null, destinationFolder);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const filename = `${uniqueSuffix}${path.extname(file.originalname)}`;
-    console.log('File Name:', filename);
     cb(null, filename);
   }
 });

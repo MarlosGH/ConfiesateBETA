@@ -104,6 +104,7 @@ body {
 .opciones{
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap;
 }
 .option_conten{
     background-color: rgb(202, 202, 202);
@@ -123,6 +124,9 @@ body {
     position: relative;
     background-color: black;
     border-radius: 15px;
+    max-height: 500px;
+    display: flex;
+    justify-content: center;
 }
 
 .image-container img {
@@ -169,6 +173,7 @@ body {
         font-family: 'Font Awesome 5 Free';
         margin-right: 8px;
     }
+
 }
 .ocultar{
     display: none;
