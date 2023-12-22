@@ -1,0 +1,10 @@
+{
+    "editor.fontLigatures": true,
+    "editor.inlayHints.fontFamily": "'Cascadia Code PL'",
+    "editor.fontFamily": "'Cascadia Code PL' ,Consolas, 'Courier New', monospace",
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
+    "editor.guides.bracketPairs": true,
+    "breadcrumbs.enabled": false,
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.cursorBlinking": "expand"
+}

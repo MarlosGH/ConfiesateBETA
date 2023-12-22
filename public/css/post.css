@@ -1,0 +1,248 @@
+:root{
+    --color: rgba(0, 0, 0, 0.027);
+    --s-color: rgba(116, 116, 116, 0.863);
+    --t-color: rgba(71, 71, 71, 0.863);
+}
+section{
+    background: linear-gradient(#d4d4d4,#c2c0c0,
+     #aaa9a9,#a8a7a7,#a7a7a7,rgb(187, 182, 182), #d4d4d4);
+    border-radius: 15px; /* Agregamos bordes redondeados */
+}
+.conten-imgs{
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+.img-post {
+    width: 60%;
+    border-radius: 10px;
+    margin: 10px 0;
+    display: none;
+    transition: opacity 1s ease-in-out;
+    transition: all .3s;
+}
+.img-post.active {
+    display: block;
+    transition: all .3s;
+}
+ul{
+    padding: 0 5px;
+    width: 100%;
+    justify-content: center;
+    display: flex;
+}
+li{
+    margin: 10px;
+    list-style: none;
+}
+.button-reac{
+    background-color: red;
+    border-radius: 5px;
+    padding: 10px 57px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 3px;
+}
+.comentarios {
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+.comentarios h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+.input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: none;
+    font-size: 15px;
+}
+.conten-input {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+.conten-input img {
+    width: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.as {
+    width: 100%;
+    border-bottom: 2px solid #535353;
+    margin-bottom: 15px;
+}
+.comment-conten {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+.comment-conten .user-conten {
+    background-color: rgba(71, 71, 71, 0.603);
+    padding: 5px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+.comment-conten .comment {
+    flex: 1;
+}
+.comment-conten .comment-p {
+    font-size: 17px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+}
+.comment-conten .reactions {
+    display: flex;
+    margin-top: 10px;
+}
+.comment-p {
+    font-size: 17px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.comments-conten {
+    margin-top: 20px;
+}
+.user-conten {
+    background-color: rgba(71, 71, 71, 0.603);
+    padding: 3px 5px 3px 5px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+.button-reaction {
+    background-color: rgb(102, 102, 102);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.4s;
+    border-radius: 4px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.027);
+}
+.button-reaction:hover {
+    background-color: rgba(116, 116, 116, 0.863);
+}
+
+/* Estilo para el título del post */
+.title-post {
+    font-weight: bold;
+    font-size: 30px;
+    margin-left: 8px;
+    margin-bottom: 5px; /* Espacio adicional después del título */
+}
+
+/* Estilo para la descripción del post */
+.descrip-post {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+/* Añadido: Estilo para el botón de inicio */
+.button {
+    background-color: var(--first-color);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.4s;
+    border-radius: 4px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover {
+    background-color: var(--second-color);
+}
+
+/* Añadido: Estilo para el footer */
+.footer {
+    text-align: center;
+    padding: 20px; /* Aumenté el espacio en el pie de página */
+    background-color: #333333;
+    color: #fff;
+    margin-top: auto;
+    width: 100%;
+}
+/* Añadido: Estilo para la imagen del usuario en comentarios */
+.comment-conten .user-conten img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+/* Añadido: Estilo para la sección de reacciones en comentarios */
+.comment-conten .reactions {
+    display: flex;
+    margin-top: 10px;
+}
+
+/* Añadido: Estilo para los botones de reacción en comentarios */
+.comment-conten .button-reaction {
+    background-color: var(--first-color);
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: background-color 0.4s;
+    border-radius: 4px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.027);
+}
+
+.comment-conten .button-reaction:hover {
+    background-color: var(--second-color);
+}
+.carousel {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#carousel-image {
+    width: 60%;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+#prev, #next {
+    background-color: var(--s-color);
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 10px;
+    transition: all .3s;
+    display: block;
+}
+#prev:hover, #next:hover {
+    background-color: var(--t-color); /* Darker blue */
+}
+main{
+    background: linear-gradient(#d4d4d400, #79787870, #44444470 ,#44444470,#79787870, #c2c0c000, #c2c0c000);
+    border-radius: 10px;
+}

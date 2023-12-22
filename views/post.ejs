@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCC Confiesate</title>
+    <link rel="stylesheet" href="/public/css/style.css"> 
+    <link rel="stylesheet" href="/public/css/post.css">
+    <link rel="icon" href="https://vcc.softromy.com/favicon.png">
+    <script src="https://kit.fontawesome.com/a8192839c1.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="header">
+        <span class="span-max">CONFIESATE</span>
+        <button class="button">Inicio</button>
+    </header>
+    <section>
+        <!-- Título del post -->
+        <div class="titles">
+            <h1 class="title-post" style="margin: 3px 20px;"><%= post.titulo %></h1>
+            <p class="descrip-post" style="margin: 2px 20px;"><%= post.descripcion %></p>
+        </div>
+        <!-- Contenedor de imágenes -->
+        <% const folderPath = `/uploads/${post.carpeta}`; %>
+        <% const mediaFiles = post.imagenes ? JSON.parse(post.imagenes) : []; %>
+        <main class="main">
+            <div class="conten-imgs carousel">
+                <button id="prev"> < </button>
+                <% mediaFiles.forEach((media, index) => { %>
+                    <img src="<%=`${folderPath}/${media}`%>" class="img-post" id="carousel-image-<%=index%>" alt="Media de Post">
+                <% }); %>
+                <button id="next"> > </button>
+            </div>
+            <div>
+                <ul>
+                    <li><button class="button-reaction button-reac">❤️ 0</button></li>
+                    <li><button class="button-reaction button-reac">🤣 0</button></li>
+                    <li><button class="button-reaction button-reac">😥 0</button></li>
+                    <li><button class="button-reaction button-reac">😈 0</button></li>
+                    <li><button class="button-reaction button-reac">😪 0</button></li>
+                </ul>
+            </div>
+        </main>
+    </div>
+</main>
+
+        <!-- Sección de comentarios -->
+        <div class="comentarios" style="margin: 20px;">
+            <!-- Título de comentarios -->
+            <h2>0 comentarios</h2>
+            <div class="conten-input">
+                <!-- Imagen del usuario que comenta -->
+                <img src="../prv/img/user.png" style="width: 30px;" alt="Imagen de usuario">
+                <!-- Input para agregar comentario -->
+                <input type="text" name="" id="" class="input" placeholder="Agregar un comentario...">
+            </div>
+
+            <!-- Línea divisora -->
+            <div class="as"></div>
+
+            <!-- Contenedor de comentarios -->
+            <div class="comments-conten">
+                <div class="comment-conten">
+                    <!-- Imagen del usuario que comenta -->
+                    <div class="user-conten">
+                        <img src="../prv/img/user.png" width="20px" alt="Imagen de usuario">
+                    </div>
+                    <!-- Contenido del comentario -->
+                    <div class="comment">
+                        <!-- Párrafo del comentario -->
+                        <p class="comment-p">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
+                        <!-- Botones de reacción en el comentario -->
+                        <div class="reactions">
+                            <button class="button-reaction">❤️</button>
+                            <button class="button-reaction">👏</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="comment-conten">
+                    <div class="user-conten">
+                        <img src="../prv/img/user.png" width="20px" alt="Imagen de usuario">
+                    </div>
+                    <div class="comment">
+                        <p class="comment-p">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
+                        <div class="reactions">
+                            <button class="button-reaction">❤️</button>
+                            <button class="button-reaction">👏</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment-conten">
+                    <!-- Imagen del usuario que comenta -->
+                    <div class="user-conten">
+                        <img src="../prv/img/user.png" width="20px" alt="Imagen de usuario">
+                    </div>
+                    <!-- Contenido del comentario -->
+                    <div class="comment">
+                        <!-- Párrafo del comentario -->
+                        <p class="comment-p">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima, aliquid voluptate sint sed reprehenderit inventore odio, eius eaque repellat quos animi maxime autem, esse corrupti. Ab molestiae praesentium amet nisi.</p>
+                        <!-- Botones de reacción en el comentario -->
+                        <div class="reactions">
+                            <button class="button-reaction">❤️</button>
+                            <button class="button-reaction">👏</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+        <p>&copy; 2023 Confiesate Ccalamaquino</p>
+    </footer>
+    <script src="../public/js/post.js"></script>
+</body>
+</html>

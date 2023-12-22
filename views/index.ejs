@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCC Confiesate</title>
+    <link rel="stylesheet" href="../public/css/style.css"> 
+    <link rel="icon" href="https://vcc.softromy.com/favicon.png">
+    <script src="https://kit.fontawesome.com/a8192839c1.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../public/css/index-categories.css">
+</head>
+<body>
+    <header class="header">
+        <span class="span-max">CONFIESATE</span>
+        <button class="button">Confesarme</button>
+    </header>
+    <div class="Messages">
+      <h2>¡BIENVENIDOS A CONFIESATE!</h2>
+    </div>
+    <div class="section-categories">
+      <div class="order">
+        <button class="btn-orden" id="button-orden">↓ ORDEN ↓</button>
+          <ul class="opciones-orden ocultar">
+              <li><button class="opcion-orden- ultima-publicacion">Ultima Publicacion</button></li>
+              <li><button class="opcion-orden- primera-publicacion">Primera Publicacion</button></li>
+              <li><button class="opcion-orden- aleatorio">Aleatorio</button></li>
+          </ul>
+      </div>
+      <div>
+        <p class="confesiones_total">CONFESIONES: <b class="confesionesTotal">15</b></p>
+      </div>
+  </div>
+    <section class="section">
+      <div class="main-content">
+        <% confesiones.forEach((confesion) => { %>
+            <div class="post">
+              <div class="titles" style="overflow: hidden;">
+                <h2 class="title-post"><a href="/post/<%= confesion.id %>" style="text-decoration: none; color: #5f5f5f !important;"><%= confesion.titulo %></a></h2>
+                <div style="max-height: 100px;">
+                  <p class="descripcion-post"><%= confesion.descripcion %></p>
+                </div>
+              </div>
+              <% const folderPath = `/uploads/${confesion.carpeta}`; %>
+              <% const imagenes = JSON.parse(confesion.imagenes); %>
+              <div class="image-container">
+                <% const mediaFiles = JSON.parse(confesion.imagenes); %>
+              
+                <% if (mediaFiles.length > 0) { %>
+                  <% const firstMediaFile = mediaFiles[0]; %>
+                  
+                  <% if (firstMediaFile.endsWith('.mp4') || firstMediaFile.endsWith('.webm') || firstMediaFile.endsWith('.ogg')) { %>
+                    <!-- Renderizar etiqueta de video -->
+                    <video width="100%" height="auto" controls>
+                      <source src="<%= `${folderPath}/${firstMediaFile}` %>" type="video/mp4">
+                      Tu navegador no soporta el tag de video.
+                    </video>
+                  <% } else { %>
+                    <!-- Renderizar etiqueta de imagen -->
+                    <img src="<%= `${folderPath}/${firstMediaFile}` %>" alt="Media del post" class="img-post">
+                  <% } %>
+                <% } %>
+              </div>
+              
+              <div class="opciones">
+                <a href="/post/<%= confesion.id %>" style="text-decoration: none; color: #5f5f5f !important;">
+                  <div class="option_conten comment-conten">
+                    <i class="fa-solid fa-comment"></i>
+                    <span>Comentarios</span>
+                  </div>
+                </a>
+                <div class="option_conten heart-conten">
+                  <i class="fa-solid fa-heart"></i>
+                  <span>Me gusta</span>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+      </div>
+  </section>
+    <footer class="footer">
+        <p>&copy; 2023 Confiesate Ccalamaquino</p>
+    </footer>
+    <script src="../public/js/main.js" type="module"></script>
+</body>
+</html>
