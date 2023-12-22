@@ -55,6 +55,9 @@ body {
     grid-template-columns: 500px;
     gap: 10px;
     padding: 10px;
+    display: grid;
+    grid-template-columns: 100%;
+    gap: 10px;
 }
 .post {
     border-bottom: 1px solid #bebebe;
@@ -140,9 +143,6 @@ body {
     .main-content {
         width: 90%;
         margin: 15px 0;
-        display: grid;
-        grid-template-columns: 100%;
-        gap: 10px;
         padding: 10px;
     }
     .post{

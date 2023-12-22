@@ -61,5 +61,5 @@ previewImages();
 const btnSubmit = document.getElementById('btn-submit');
 
 btnSubmit.addEventListener('click', e =>{
-    e.style.display = 'none'
+    btnSubmit.style.display = 'none'
 })
