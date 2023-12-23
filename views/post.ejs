@@ -32,7 +32,7 @@
                 <button id="next"> > </button>
             </div>
             <div>
-                <ul>
+                <ul class="ul-reactions">
                     <li><button class="button-reaction button-reac">❤️ 0</button></li>
                     <li><button class="button-reaction button-reac">🤣 0</button></li>
                     <li><button class="button-reaction button-reac">😥 0</button></li>
@@ -44,15 +44,18 @@
     </div>
 </main>
 
-        <!-- Sección de comentarios -->
+    <!-- Sección de comentarios -->
         <div class="comentarios" style="margin: 20px;">
             <!-- Título de comentarios -->
-            <h2>0 comentarios</h2>
+            <h2><%= comentarios.length %> comentarios</h2>
             <div class="conten-input">
                 <!-- Imagen del usuario que comenta -->
                 <img src="../prv/img/user.png" style="width: 30px;" alt="Imagen de usuario">
-                <!-- Input para agregar comentario -->
-                <input type="text" name="" id="" class="input" placeholder="Agregar un comentario...">
+                <!-- Formulario para agregar comentario -->
+                <form action="/confesion/<%= post.id %>/comentario" method="post" class="input-form">
+                    <input type="text" name="contenido" class="input" placeholder="Agregar un comentario...">
+                    <button type="submit">Comentar</button>
+                </form>
             </div>
 
             <!-- Línea divisora -->
@@ -60,51 +63,17 @@
 
             <!-- Contenedor de comentarios -->
             <div class="comments-conten">
-                <div class="comment-conten">
-                    <!-- Imagen del usuario que comenta -->
-                    <div class="user-conten">
-                        <img src="../prv/img/user.png" width="20px" alt="Imagen de usuario">
-                    </div>
-                    <!-- Contenido del comentario -->
-                    <div class="comment">
-                        <!-- Párrafo del comentario -->
-                        <p class="comment-p">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
-                        <!-- Botones de reacción en el comentario -->
-                        <div class="reactions">
-                            <button class="button-reaction">❤️</button>
-                            <button class="button-reaction">👏</button>
+                <% comentarios.forEach(comment => { %>
+                    <div class="comment-conten">
+                        <div class="user-conten">
+                            <img src="../prv/img/user.png" width="20px" alt="Imagen de usuario">
+                        </div>
+                        <div class="comment">
+                            <p class="comment-p"><%= comment.text %></p>
                         </div>
                     </div>
-                </div>
-                <div class="comment-conten">
-                    <div class="user-conten">
-                        <img src="../prv/img/user.png" width="20px" alt="Imagen de usuario">
-                    </div>
-                    <div class="comment">
-                        <p class="comment-p">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
-                        <div class="reactions">
-                            <button class="button-reaction">❤️</button>
-                            <button class="button-reaction">👏</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="comment-conten">
-                    <!-- Imagen del usuario que comenta -->
-                    <div class="user-conten">
-                        <img src="../prv/img/user.png" width="20px" alt="Imagen de usuario">
-                    </div>
-                    <!-- Contenido del comentario -->
-                    <div class="comment">
-                        <!-- Párrafo del comentario -->
-                        <p class="comment-p">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minima, aliquid voluptate sint sed reprehenderit inventore odio, eius eaque repellat quos animi maxime autem, esse corrupti. Ab molestiae praesentium amet nisi.</p>
-                        <!-- Botones de reacción en el comentario -->
-                        <div class="reactions">
-                            <button class="button-reaction">❤️</button>
-                            <button class="button-reaction">👏</button>
-                        </div>
-                    </div>
-                </div>
+                    <div class="es"></div>
+                <% }); %>
             </div>
         </div>
     </section>

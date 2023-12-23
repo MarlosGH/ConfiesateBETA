@@ -18,8 +18,18 @@ CREATE TABLE IF NOT EXISTS confesiones (
 );
 `;
 
+const createTableComments = `
+CREATE TABLE IF NOT EXISTS comentarios (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  postId INTEGER,
+  text TEXT,
+  FOREIGN KEY (postId) REFERENCES confesiones(id)
+)`;
+
+
 db.serialize(() => {
     db.run(createTableQuery);
+    db.run(createTableComments);
 });
 
 module.exports = db;

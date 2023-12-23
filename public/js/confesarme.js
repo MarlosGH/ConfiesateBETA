@@ -57,9 +57,12 @@ posts.forEach(post => {
 
 previewImages();
 
+const descrip = document.querySelector('#confession-text')
 
-const btnSubmit = document.getElementById('btn-submit');
+if(!descrip.innerHTML == ''){
+    const btnSubmit = document.getElementById('btn-submit');
 
-btnSubmit.addEventListener('click', e =>{
-    btnSubmit.style.display = 'none'
-})
+    btnSubmit.addEventListener('click', e =>{
+        btnSubmit.style.display = 'none'
+    })
+}

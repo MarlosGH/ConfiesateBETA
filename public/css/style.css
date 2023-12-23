@@ -52,12 +52,9 @@ body {
 .main-content {
     margin-bottom: 15px;
     display: grid;
-    grid-template-columns: 500px;
-    gap: 10px;
-    padding: 10px;
-    display: grid;
     grid-template-columns: 100%;
     gap: 10px;
+    padding: 10px;
 }
 .post {
     border-bottom: 1px solid #bebebe;
@@ -92,7 +89,6 @@ body {
 .button:hover {
     background-color: var(--second-color);
 }
-
 .footer {
     text-align: center;
     padding: 1em;
@@ -101,6 +97,7 @@ body {
     margin-top: auto;
     width: 100%;
 }
+
 .opciones{
     display: flex;
     justify-content: space-around;
@@ -119,7 +116,8 @@ body {
 }
 
 .image-container {
-    width: 100%;
+    max-width: 450px;
+    max-height: 400px;
     overflow: hidden;
     position: relative;
     background-color: black;
@@ -143,6 +141,16 @@ body {
     font-family: 'Font Awesome 5 Free';
     margin-right: 8px;
 }
+.span-comment::before{
+    content: '\f075';
+    font-family: 'Font Awesome 5 Free';
+    color:rgb(36, 36, 36);
+}
+.span-heart::before{
+    content: '\f004';
+    font-family: 'Font Awesome 5 Free';
+    color:rgb(36, 36, 36);
+}
 @media screen and (max-width: 652px){
     .main-content {
         width: 90%;
@@ -164,16 +172,21 @@ body {
     }
 }
 
-@media screen and (max-width: 342px){
+@media screen and (max-width: 374px){
     .header{
         justify-content: center;
     }
     .span-max::before {
         content: ''; /* Código del ícono heart */
-        font-family: 'Font Awesome 5 Free';
-        margin-right: 8px;
     }
-
+    .span-comment::before{
+        content: '';
+        font-family: 'Font Awesome 5 Free';
+        color:rgb(36, 36, 36);
+    }
+    .span-heart::before{
+        content: '';
+    }
 }
 .ocultar{
     display: none;

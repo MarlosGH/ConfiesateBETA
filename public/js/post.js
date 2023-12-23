@@ -22,6 +22,7 @@ document.getElementById('prev').addEventListener('click', function() {
     images[index].classList.add('active');
     
 });
+
 let imgs = document.querySelectorAll('.img-post');
 
 if(imgs.length == 0){
