@@ -15,7 +15,6 @@ section{
     justify-content: center;
 }
 .img-post {
-    width: 60%;
     border-radius: 10px;
     margin: 10px 0;
     display: none;
@@ -82,14 +81,14 @@ li{
     margin-bottom: 15px;
 }
 .es {
-    width: 50%;
+    width: 100%;
     border-bottom: 2px solid #5353536b;
     margin-bottom: 10px;
 }
 .comment-conten {
     background-color: rgba(255, 255, 255, 0.8);
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0;
     display: flex;
     align-items: center;
 }
@@ -181,6 +180,16 @@ li{
     justify-content: center;
     align-items: center;
 }
+.carousel img{
+    max-height: 500px;
+    cursor: pointer;
+}
+.img-container{
+    display: flex;
+    justify-content: center;
+    width: blue;
+    overflow: hidden;
+}
 #carousel-image {
     width: 60%;
     border-radius: 10px;
@@ -210,23 +219,4 @@ main{
 .ul-reactions{
     display: flex;
     flex-wrap: wrap;
-}
-@media screen and (max-width: 516px){
-    .img-post{
-        width: 80%;
-    }
-    .button-reaction{
-        padding: 5px 15px;
-        font-size: 14;
-    }
-    #prev, #next{
-        font-size: 13px;
-        padding: 7px 17px;
-    }
-}
-@media screen and (max-width: 332px){
-    .button-reaction{
-        padding: 3px 12px;
-        font-size: 12;
-    }
 }

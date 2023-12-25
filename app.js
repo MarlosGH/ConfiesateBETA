@@ -82,16 +82,17 @@ app.post('/confesion', upload.array('file'), (req, res) => {
 app.post('/confesion/:postId/comentario', (req, res) => {
   const postId = req.params.postId;
   const contenido = req.body.contenido;
-
-  const stmt = db.prepare('INSERT INTO comentarios (postId, text) VALUES (?, ?)');
-  stmt.run(postId, contenido, (err) => {
-    if (err) {
-      console.error('Error al insertar comentario en la base de datos:', err);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
-    res.redirect(`/post/${postId}`);
-  });
-  stmt.finalize();
+  if(!contenido == ''){
+    const stmt = db.prepare('INSERT INTO comentarios(postId, text) VALUES (?, ?)');
+    stmt.run(postId, contenido, (err) => {
+      if (err) {
+        console.error('Error al insertar comentario en la base de datos:', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      res.redirect(`/post/${postId}`);
+    });
+    stmt.finalize();
+  }
 });
 
 // Ruta para mostrar la página de un post y sus comentarios
@@ -109,18 +110,17 @@ app.get('/post/:postId', (req, res) => {
       return res.status(404).send('Post not found');
     }
 
-    const comentariosStmt = db.prepare('SELECT * FROM comentarios WHERE postId = ?');
+    const comentariosStmt = db.prepare('SELECT * FROM comentarios WHERE postId = ? ORDER BY id DESC');
     comentariosStmt.all(postId, (err, comentarios) => {
       if (err) {
         console.error('Error al obtener comentarios desde SQLite:', err);
         return res.status(500).send('Internal Server Error');
       }
-
       res.render('post.ejs', { post: post, comentarios: comentarios });
     });
   });
 });
-const pageSize = -1;
+const pageSize = 5;
 
 // Ruta para mostrar la página principal con las confesiones
 app.get('/', (req, res) => {
@@ -136,29 +136,59 @@ app.get('/', (req, res) => {
       console.error('Error al obtener confesiones desde SQLite:', err);
       return res.status(500).send('Internal Server Error');
     }
-
+  
     res.render('index.ejs', { confesiones: rows, basePath: '/prv/uploads' });
+  });  
+});
+
+// Ruta para cargar más confesiones
+app.get('/load-more', (req, res) => {
+  const page = req.query.page || 1;
+  const pageSize = 5; // Tamaño de la página
+
+  // Calcular el índice de inicio basado en el tamaño de página y la página actual
+  const startIndex = (page - 1) * pageSize;
+
+  // Consulta para obtener las confesiones desde la base de datos, limitadas por el tamaño de página y el índice de inicio
+  db.all('SELECT * FROM confesiones ORDER BY id DESC LIMIT ? OFFSET ?', [pageSize, startIndex], (err, rows) => {
+    if (err) {
+      console.error('Error al obtener confesiones desde SQLite:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+    res.json({ confesiones: rows });
   });
 });
 
-app.get('/load-more', async (req, res) => {
+
+app.post('/reaccionar/:postId/:reactionType', async (req, res) => {
   try {
-    const page = req.query.page || 1;
-    const pageSize = 5; // Número de posts por página
-    const offset = (page - 1) * pageSize;
+    // Obtén postId y reactionType de req.params
+    const { postId, reactionType } = req.params;
 
-    // Consulta para obtener más confesiones desde SQLite
-    const query = `SELECT * FROM confesiones ORDER BY id DESC LIMIT ${pageSize} OFFSET ${offset}`;
-    const confesiones = await db.all(query);
+    // Verifica que postId sea un número antes de usarlo
+    if (isNaN(postId)) {
+      return res.status(400).json({ error: 'El postId no es un número válido.' });
+    }
 
-    // Enviar las confesiones como respuesta
-    res.json(confesiones);
-  } catch (err) {
-    console.error('Error al cargar más confesiones desde SQLite:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    // Usar un marcador de posición para evitar problemas con el nombre de la columna
+    const result = await db.run(`UPDATE reacciones SET ${reactionType} = ${reactionType} + 1 WHERE post_id = ?`, [postId]);
+
+    if (result && result.changes > 0) {
+      const updatedReactions = await getReactions(postId);
+      res.json(updatedReactions);
+    } else {
+      res.status(400).json({ error: 'No se pudo actualizar la reacción.' });
+    }
+  } catch (error) {
+    console.error('Error al manejar la reacción:', error);
+    res.status(500).json({ error: 'Error interno del servidor.' });
   }
 });
 
+async function getReactions(postId) {
+  return await db.get(`SELECT * FROM reacciones WHERE post_id = ?`, [postId]);
+}
 
 
 // Inicia el servidor en el puerto especificado

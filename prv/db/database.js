@@ -1,13 +1,9 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-// Ruta de la base de datos
 const dbPath = path.join(__dirname, 'confiesate.db');
-
-// Inicializa la base de datos
 const db = new sqlite3.Database(dbPath);
 
-// Crea la tabla si no existe
 const createTableQuery = `
 CREATE TABLE IF NOT EXISTS confesiones (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -26,10 +22,23 @@ CREATE TABLE IF NOT EXISTS comentarios (
   FOREIGN KEY (postId) REFERENCES confesiones(id)
 )`;
 
+const createTableReactions = `
+CREATE TABLE IF NOT EXISTS reacciones (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  post_id INTEGER UNIQUE,
+  me_gusta INTEGER DEFAULT 0,
+  me_divierte INTEGER DEFAULT 0,
+  me_entristece INTEGER DEFAULT 0,
+  diablo INTEGER DEFAULT 0,
+  lloro INTEGER DEFAULT 0,
+  FOREIGN KEY (post_id) REFERENCES confesiones(id)
+);`;
+
 
 db.serialize(() => {
     db.run(createTableQuery);
     db.run(createTableComments);
+    db.run(createTableReactions);
 });
 
 module.exports = db;

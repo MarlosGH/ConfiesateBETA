@@ -1,0 +1,35 @@
+@media screen and (max-width: 652px){
+    .main-content {
+        width: 90%;
+        margin: 15px 0;
+        padding: 10px;
+    }
+    .post{
+        margin: 0px 10px;
+    }   
+}
+@media screen and (max-width: 262px){
+    .option_conten{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+    }
+}
+
+@media screen and (max-width: 374px){
+    .header{
+        justify-content: center;
+    }
+    .span-max::before {
+        content: ''; /* Código del ícono heart */
+    }
+    .span-comment::before{
+        content: '';
+        font-family: 'Font Awesome 5 Free';
+        color:rgb(36, 36, 36);
+    }
+    .span-heart::before{
+        content: '';
+    }
+}

@@ -44,7 +44,6 @@ function addInfo(post) {
 }
 
 const posts = document.querySelectorAll('.post');
-
 posts.forEach(post => {
     const imageContainer = post.querySelector('.image-container');
     const images = imageContainer.querySelectorAll('img');
@@ -53,7 +52,6 @@ posts.forEach(post => {
         addInfo(post);
     }
 });
-
 
 previewImages();
 

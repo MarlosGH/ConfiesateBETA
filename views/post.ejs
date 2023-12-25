@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/public/css/style.css"> 
     <link rel="stylesheet" href="/public/css/post.css">
     <link rel="icon" href="https://vcc.softromy.com/favicon.png">
+    <link rel="stylesheet" href="../public/css/media.queryPost.css">
     <script src="https://kit.fontawesome.com/a8192839c1.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -27,17 +28,19 @@
             <div class="conten-imgs carousel">
                 <button id="prev"> < </button>
                 <% mediaFiles.forEach((media, index) => { %>
-                    <img src="<%=`${folderPath}/${media}`%>" class="img-post" id="carousel-image-<%=index%>" alt="Media de Post">
+                    <div class="img-container">
+                        <img src="<%=`${folderPath}/${media}`%>" class="img-post" id="carousel-image-<%=index%>" alt="Media de Post">
+                    </div>
                 <% }); %>
                 <button id="next"> > </button>
             </div>
             <div>
                 <ul class="ul-reactions">
-                    <li><button class="button-reaction button-reac">❤️ 0</button></li>
-                    <li><button class="button-reaction button-reac">🤣 0</button></li>
-                    <li><button class="button-reaction button-reac">😥 0</button></li>
-                    <li><button class="button-reaction button-reac">😈 0</button></li>
-                    <li><button class="button-reaction button-reac">😪 0</button></li>
+                    <li><button data-post-id="<%= post.id %>" class="button-reaction button-reac">❤️ 0</button></li>
+                    <li><button data-post-id="<%= post.id %>" class="button-reaction button-reac">🤣 0</button></li>
+                    <li><button data-post-id="<%= post.id %>" class="button-reaction button-reac">😥 0</button></li>
+                    <li><button data-post-id="<%= post.id %>" class="button-reaction button-reac">😈 0</button></li>
+                    <li><button data-post-id="<%= post.id %>" class="button-reaction button-reac">😪 0</button></li>
                 </ul>
             </div>
         </main>
@@ -53,8 +56,8 @@
                 <img src="../prv/img/user.png" style="width: 30px;" alt="Imagen de usuario">
                 <!-- Formulario para agregar comentario -->
                 <form action="/confesion/<%= post.id %>/comentario" method="post" class="input-form">
-                    <input type="text" name="contenido" class="input" placeholder="Agregar un comentario...">
-                    <button type="submit">Comentar</button>
+                    <input type="text" name="contenido" class="input" placeholder="Agregar un comentario..." required>
+                    <button type="submit" id="btn-comment">Comentar</button>
                 </form>
             </div>
 
@@ -66,7 +69,7 @@
                 <% comentarios.forEach(comment => { %>
                     <div class="comment-conten">
                         <div class="user-conten">
-                            <img src="../prv/img/user.png" width="20px" alt="Imagen de usuario">
+                            <img src="../prv/img/user2.png" width="20px" alt="Imagen de usuario">
                         </div>
                         <div class="comment">
                             <p class="comment-p"><%= comment.text %></p>
