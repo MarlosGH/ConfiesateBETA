@@ -7,14 +7,17 @@ document.querySelector(".button").addEventListener("click", () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Hacer una solicitud al servidor para obtener la cantidad total de confesiones
   const confesionesTotalElement = document.querySelector('.confesiones_total');
 
+ 
   function updateTotalConfesiones() {
     fetch('/obtenerTotalConfesiones')
       .then(response => response.json())
       .then(data => {
         confesionesTotalElement.textContent =  'CONFESIONES: ' + data.totalConfesiones;
+        if (data.totalConfesiones <= 5) {
+          document.querySelector('#load-more-button').style.display = 'none'
+        }
       })
       .catch(error => {
         console.error('Error al obtener la cantidad total de confesiones:', error);
@@ -141,14 +144,18 @@ function loadMorePosts() {
   console.log('Cargando más confesiones...');
   if (!loading) {
     loading = true;
-    fetch(`/load-more?page=${page}`)
+    fetch(`/load-more?page=${page}`)  
       .then(response => response.json())
       .then(data => {
         console.log('Datos cargados:', data);
+        if (data.confesiones < 1) {
+          document.querySelector('#load-more-button').style.display = 'none'
+        }
         if (data.confesiones && Array.isArray(data.confesiones)) {
           appendPostsToDOM(data); // Cambiado a esta función para manejar la lógica de agregar publicaciones
           page++;
         } else {
+          
           console.error('La respuesta del servidor no contiene un array de confesiones válido:', data);
         }
         loading = false;

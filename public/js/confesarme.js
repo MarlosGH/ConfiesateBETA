@@ -2,31 +2,49 @@ document.querySelector(".button").addEventListener("click", (e) =>{
     window.location.href = "/"
 })
 
-// // FUNCION DE RENDERIZAR IMAGEN
-
-function previewImages() {
-    let input = document.getElementById('image-input');
-    let previewContainer = document.getElementById('img-conten');
+// FUNCION DE RENDERIZAR ARCHIVOS (IMÁGENES O VIDEOS)
+function previewFiles() {
+    let input = document.getElementById('file-input');
+    let previewContainer = document.getElementById('file-conten');
 
     previewContainer.innerHTML = '';
 
     if (input.files && input.files.length > 0) {
         for (let i = 0; i < input.files.length; i++) {
-            let reader = new FileReader();
-            let imagePreview = document.createElement('img');
+            let file = input.files[i];
+            let filePreview = document.createElement('div');
 
-            reader.onload = (function (image) {
-                return function (e) {
-                    image.src = e.target.result;
-                };
-            })(imagePreview);
+            // Verifica si el archivo es una imagen
+            if (file.type.startsWith('image')) {
+                let reader = new FileReader();
+                let imagePreview = document.createElement('img');
 
-            reader.readAsDataURL(input.files[i]);
-            imagePreview.classList.add("image-preview")
-            previewContainer.appendChild(imagePreview);
+                reader.onload = (function (image) {
+                    return function (e) {
+                        image.src = e.target.result;
+                    };
+                })(imagePreview);
+
+                reader.readAsDataURL(file);
+                imagePreview.classList.add("file-preview");
+                filePreview.appendChild(imagePreview);
+            }
+            // Verifica si el archivo es un video
+            else if (file.type.startsWith('video')) {
+                let videoPreview = document.createElement('video');
+                videoPreview.src = URL.createObjectURL(file);
+                videoPreview.classList.add("file-preview");
+                videoPreview.setAttribute("controls", "controls");
+                filePreview.appendChild(videoPreview);
+            }
+
+            previewContainer.appendChild(filePreview);
         }
     }
 }
+
+const fileInput = document.getElementById('file-input');
+fileInput.addEventListener('change', previewFiles);
 
 
 // Añadir informacion si el post tiene mas de una imagen

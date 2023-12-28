@@ -24,24 +24,27 @@
         <!-- Contenedor de imágenes -->
         <% const folderPath = `/uploads/${post.carpeta}`; %>
         <% const mediaFiles = post.imagenes ? JSON.parse(post.imagenes) : []; %>
-        <main class="main">
+        <main class="main">                
             <div class="conten-imgs carousel">
                 <button id="prev"> < </button>
-                <% mediaFiles.forEach((media, index) => { %>
-                    <div class="img-container">
-                        <img src="<%=`${folderPath}/${media}`%>" class="img-post" id="carousel-image-<%=index%>" alt="Media de Post">
-                    </div>
-                <% }); %>
+                <div class="img-container">
+                    <% mediaFiles.forEach((media, index) => { %>
+                        <% if (media.endsWith('.mp4') || media.endsWith('.webm') || media.endsWith('.ogg') || media.endsWith('.mkv')) { %>
+                            <!-- Si es un video -->
+                            <video controls class="img-post" id="carousel-video-<%=index%>">
+                                <source src="<%=`${folderPath}/${media}`%>" type="video/mp4" >
+                                <source src="<%=`${folderPath}/${media}`%>" type="video/webm">
+                                <source src="<%=`${folderPath}/${media}`%>" type="video/ogg">
+                            </video>
+                        <% } else if (media.endsWith('.jpg') || media.endsWith('.jpeg') || media.endsWith('.png') || media.endsWith('.gif') || media.endsWith('.jfif')) { %>
+                            <!-- Si es una imagen -->
+                            <img src="<%= `${folderPath}/${media}` %>" class="img-post" id="carousel-image-<%= index %>" alt="Media de Post">
+                        <% } else { %>
+                            <p>No se puede mostrar el archivo</p>
+                        <% } %>
+                    <% }); %>
+                </div>
                 <button id="next"> > </button>
-            </div>
-            <div>
-                <ul class="ul-reactions">
-                    <li><button data-post-id="<%= post.id %>" class="button-reaction button-reac">❤️ 0</button></li>
-                    <li><button data-post-id="<%= post.id %>" class="button-reaction button-reac">🤣 0</button></li>
-                    <li><button data-post-id="<%= post.id %>" class="button-reaction button-reac">😥 0</button></li>
-                    <li><button data-post-id="<%= post.id %>" class="button-reaction button-reac">😈 0</button></li>
-                    <li><button data-post-id="<%= post.id %>" class="button-reaction button-reac">😪 0</button></li>
-                </ul>
             </div>
         </main>
     </div>

@@ -8,18 +8,18 @@ section{
      #aaa9a9,#a8a7a7,#a7a7a7,rgb(187, 182, 182), #d4d4d4);
     border-radius: 15px; /* Agregamos bordes redondeados */
 }
-.conten-imgs{
-    width: 100%;
-    overflow: hidden;
+.img-container{
     display: flex;
     justify-content: center;
+    width: 50%;
 }
-.img-post {
+.img-post{
     border-radius: 10px;
-    margin: 10px 0;
     display: none;
     transition: opacity 1s ease-in-out;
     transition: all .3s;
+    max-width: 100%;
+    min-width: 100%;
 }
 .img-post.active {
     display: block;
@@ -184,12 +184,6 @@ li{
     max-height: 500px;
     cursor: pointer;
 }
-.img-container{
-    display: flex;
-    justify-content: center;
-    width: blue;
-    overflow: hidden;
-}
 #carousel-image {
     width: 60%;
     border-radius: 10px;
@@ -219,4 +213,21 @@ main{
 .ul-reactions{
     display: flex;
     flex-wrap: wrap;
+}
+
+.img-post {
+    display: none;
+  }
+  
+  .img-post.active {
+    display: block;
+  }
+
+  .carousel video {
+    display: none;
+}
+
+/* Añadido: Estilo para mostrar solo el video actual */
+.carousel video.active {
+    display: block;
 }

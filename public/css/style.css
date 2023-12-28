@@ -116,7 +116,6 @@ body {
 .option_conten:hover{
     background-color: rgba(136, 136, 136, 0.863);
 }
-
 .image-container {
     overflow: hidden;
     position: relative;
@@ -126,12 +125,12 @@ body {
     display: flex;
     justify-content: center;
 }
-.image-container img {
+.image-container img,video {
     max-width: 400px;
     display: none;
     margin: 0 auto;
 }
-.image-container img:first-child {
+.image-container img:first-child,video:first-child {
     display: block;
 }
 .span-max::before {

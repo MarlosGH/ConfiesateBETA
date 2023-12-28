@@ -51,16 +51,15 @@
               <% if (mediaFiles.length > 0) { %>
                 <% const firstMediaFile = mediaFiles[0]; %>
                 
-                <% if (firstMediaFile.endsWith('.mp4') || firstMediaFile.endsWith('.webm') || firstMediaFile.endsWith('.ogg')) { %>
+                <% if (firstMediaFile.endsWith('.mp4') || firstMediaFile.endsWith('.webm') || firstMediaFile.endsWith('.ogg') || firstMediaFile.endsWith('.mkv') ) { %>
                   <!-- Renderizar etiqueta de video -->
                   <a href="/post/<%= confesion.id %>" style="text-decoration: none; color: #5f5f5f !important;">
-                  <video width="100%" height="auto" controls>
-                    <source src="<%= `${folderPath}/${firstMediaFile}` %>" type="video/mp4">
+                  <video controls>
+                    <source src="<%= `${folderPath}/${firstMediaFile}` %>" type="video/mp4" >
                     Tu navegador no soporta el tag de video.
                   </video>
                  </a>
                 <% } else { %>
-                  <!-- Renderizar etiqueta de imagen -->
                   <a href="/post/<%= confesion.id %>" class="img-a">
                   <img src="<%= `${folderPath}/${firstMediaFile}` %>" alt="Media del post" class="img-post">
                  </a>
@@ -89,7 +88,7 @@
 
 <div class="footer2">
   <button @click="loadMorePosts" id="load-more-button">Cargar más</button>
-
+  
   <footer class="footer">
     <p>&copy; 2023 Confiesate Ccalamaquino</p>
   </footer>
