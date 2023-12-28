@@ -175,3 +175,10 @@ body {
     text-decoration: none;
     color: #5f5f5f !important;
 }
+.section-categories{
+    display: flex;
+    justify-content: space-between;
+}
+.confesiones_total{
+    margin: 5px;
+}

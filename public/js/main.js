@@ -1,7 +1,3 @@
-document.getElementById('button-orden').addEventListener('click', () => {
-  document.querySelector('.opciones-orden').classList.toggle('ocultar');
-});
-
 document.querySelector(".button").addEventListener("click", () => {
   window.location.href = "/confesarme";
 });
@@ -51,10 +47,12 @@ function createPostElement(post) {
   titleElement.className = 'title-post'
 
   const divDescriptionContainer = document.createElement('div');
-  divDescriptionContainer.style.maxHeight = '100px'
+  divDescriptionContainer.style.maxHeight = '100px';
+  divDescriptionContainer.style.maxWidth = '500px';
 
   const descriptionElement = document.createElement('p');
   descriptionElement.textContent = post.descripcion;
+  descriptionElement.className = 'descripcion-post';
 
   const imagesContainer = document.createElement('div');
   imagesContainer.className = 'image-container';

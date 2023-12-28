@@ -1,3 +1,39 @@
+
+const descrip = document.querySelector('#confession-text')
+const btnSubmit = document.getElementById('btn-submit');
+
+if(!descrip.innerHTML == ''){
+
+    btnSubmit.addEventListener('click', e =>{
+        btnSubmit.style.display = 'none'
+    })
+}
+
+
+document.querySelector(".button").addEventListener("click", (e) => {
+    const confirmation = confirm("¿Estás seguro de que quieres volver a la página de inicio? Tu confesión no se guardará.");
+
+    if (confirmation) {
+        window.location.href = "/";
+    }
+});
+
+const form = document.querySelector('.confession-form');
+
+btnSubmit.addEventListener('click', e => {
+    // Pregunta al usuario si realmente quiere publicar la confesión
+    const confirmation = confirm("¿Estás seguro de que quieres publicar esta confesión?");
+
+    // Si el usuario confirma, envía el formulario
+    if (!confirmation) {
+        e.preventDefault(); // Cancela el envío del formulario si no hay confirmación
+    }
+});
+
+
+
+
+
 document.querySelector(".button").addEventListener("click", (e) =>{
     window.location.href = "/"
 })
@@ -70,15 +106,5 @@ posts.forEach(post => {
         addInfo(post);
     }
 });
-
 previewImages();
 
-const descrip = document.querySelector('#confession-text')
-
-if(!descrip.innerHTML == ''){
-    const btnSubmit = document.getElementById('btn-submit');
-
-    btnSubmit.addEventListener('click', e =>{
-        btnSubmit.style.display = 'none'
-    })
-}

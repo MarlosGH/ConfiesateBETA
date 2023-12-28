@@ -11,7 +11,6 @@ section{
 .img-container{
     display: flex;
     justify-content: center;
-    width: 50%;
 }
 .img-post{
     border-radius: 10px;

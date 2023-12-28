@@ -47,6 +47,7 @@ images[0].classList.add('active');
 document.querySelectorAll('.img-post').forEach(img => {
   img.addEventListener('click', () => {
     const src = img.getAttribute('src');
-    window.open(`http://localhost:3000${src}`);
+
+    window.open(`https://confiesatebeta-production.up.railway.app${src}`);
   });
 });
