@@ -15,6 +15,7 @@ fs.mkdirSync(destinationFolder, { recursive: true });
 // Multer
 let folderName = null;
 
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (!folderName) {
@@ -59,15 +60,19 @@ app.get('/obtenerTotalConfesiones', (req, res) => {
   });
 });
 
+
+
+
 // Ruta para manejar la publicación del formulario
 app.post('/confesion', upload.array('file'), (req, res) => {
   const descripcion = req.body.descripcion;
   const titulo = req.body.titulo;
   const imagenes = req.files ? req.files.map(file => file.filename) : [];
   const carpeta = req.files && req.files.length > 0 ? path.basename(path.dirname(req.files[0].path)) : null;
-
-  const stmt = db.prepare('INSERT INTO confesiones (titulo, descripcion, imagenes, carpeta) VALUES (?, ?, ?, ?)');
-  stmt.run(titulo, descripcion, JSON.stringify(imagenes), carpeta, (err) => {
+  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress; // ✅ capturar IP
+  
+  const stmt = db.prepare('INSERT INTO confesiones (titulo, descripcion, imagenes, carpeta, ip) VALUES (?, ?, ?, ?, ?)');
+  stmt.run(titulo, descripcion, JSON.stringify(imagenes), carpeta, ip, (err) => {
     if (err) {
       console.error('Error al insertar confesión en la base de datos:', err);
       return res.status(500).json({ error: 'Internal Server Error' });
@@ -77,6 +82,9 @@ app.post('/confesion', upload.array('file'), (req, res) => {
   stmt.finalize();
   folderName = null;
 });
+
+
+
 
 // Ruta para manejar la publicación del formulario y agregar comentarios
 app.post('/confesion/:postId/comentario', (req, res) => {

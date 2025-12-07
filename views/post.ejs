@@ -30,15 +30,15 @@
                 <div class="img-container">
                     <% mediaFiles.forEach((media, index) => { %>
                         <% if (media.endsWith('.mp4') || media.endsWith('.webm') || media.endsWith('.ogg') || media.endsWith('.mkv')) { %>
-                            <!-- Si es un video -->
+                            <!-- Video -->
                             <video controls class="img-post" id="carousel-video-<%=index%>">
-                                <source src="<%=`${folderPath}/${media}`%>" type="video/mp4" >
+                                <source src="<%=`${folderPath}/${media}`%>" type="video/mp4">
                                 <source src="<%=`${folderPath}/${media}`%>" type="video/webm">
                                 <source src="<%=`${folderPath}/${media}`%>" type="video/ogg">
                             </video>
-                        <% } else if (media.endsWith('.jpg') || media.endsWith('.jpeg') || media.endsWith('.png') || media.endsWith('.gif') || media.endsWith('.jfif')) { %>
-                            <!-- Si es una imagen -->
-                            <img src="<%= `${folderPath}/${media}` %>" class="img-post" id="carousel-image-<%= index %>" alt="Media de Post">
+                        <% } else if (media.match(/\.(jpg|jpeg|png|gif|jfif)$/)) { %>
+                            <!-- Imagen -->
+                            <img src="<%= `${folderPath}/${media}` %>" class="img-post fullscreenable" id="carousel-image-<%= index %>" alt="Media de Post">
                         <% } else { %>
                             <p>No se puede mostrar el archivo</p>
                         <% } %>
@@ -47,8 +47,11 @@
                 <button id="next"> > </button>
             </div>
         </main>
-    </div>
-</main>
+
+        <div id="fullscreenModal" class="fullscreen-modal">
+            <span class="close-modal">&times;</span>
+            <img id="fullscreenImage" src="" alt="Imagen en pantalla completa">
+        </div>
 
     <!-- Sección de comentarios -->
         <div class="comentarios" style="margin: 20px;">
@@ -72,7 +75,7 @@
                 <% comentarios.forEach(comment => { %>
                     <div class="comment-conten">
                         <div class="user-conten">
-                            <img src="../prv/img/user2.png" width="20px" alt="Imagen de usuario">
+                            <img src="../prv/img/user.png" width="20px" alt="Imagen de usuario">
                         </div>
                         <div class="comment">
                             <p class="comment-p"><%= comment.text %></p>
@@ -87,5 +90,28 @@
         <p>&copy; 2023 Confiesate Ccalamaquino</p>
     </footer>
     <script src="../public/js/post.js"></script>
+    <script>
+        // Abrir imagen en pantalla completa
+        const fullscreenableImages = document.querySelectorAll('.fullscreenable');
+        const modal = document.getElementById('fullscreenModal');
+        const modalImg = document.getElementById('fullscreenImage');
+        const closeModal = document.querySelector('.close-modal');
+    
+        fullscreenableImages.forEach(img => {
+            img.addEventListener('click', () => {
+                modal.style.display = 'flex';
+                modalImg.src = img.src;
+            });
+        });
+    
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.style.display = 'none';
+        });
+    </script>
+    
 </body>
 </html>
