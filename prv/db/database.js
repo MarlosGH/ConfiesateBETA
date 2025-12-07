@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS confesiones (
   titulo TEXT,
   descripcion TEXT,
   carpeta TEXT,
-  imagenes TEXT
+  imagenes TEXT,
+  ip TEXT
 );
 `;
 
