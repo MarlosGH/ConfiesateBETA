@@ -1,51 +1,54 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VCC Confiesate</title>
-    <link rel="stylesheet" href="../public/css/style.css"> 
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="https://vcc.softromy.com/favicon.png">
-    <link rel="stylesheet" href="../public/css/confesarme.css">
-    <script src="https://kit.fontawesome.com/a8192839c1.js" crossorigin="anonymous"></script>
-</head>
-<body>
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>VCC Confiesate</title>
+        <link rel="stylesheet" href="../public/css/style.css"> 
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="icon" href="https://vcc.softromy.com/favicon.png">
+        <link rel="stylesheet" href="../public/css/confesarme.css">
+        <script src="https://kit.fontawesome.com/a8192839c1.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <header class="header">
+            <span class="span-max">CONFIESATE</span>
+            <button class="button">  Inicio  </button> 
+        </header>
 
-    <header class="header">
-        <span class="span-max">CONFIESATE</span>
-        <button class="button">  Inicio  </button> 
-    </header>
-
-    <div class="des">
-        <p>Las confesiones serán completamente anónimas, ya que no requerimos ningún dato personal ni solicitamos la creación de una cuenta para preservar su privacidad de manera absoluta.</p>
-    </div>
-
-    <section>
-        <div class="main-content">
-            <form action="/confesion" method="post" enctype="multipart/form-data" class="confession-form">
-                <h2 style="text-align: center; font-weight: bold; font-size: 1.5em;">Publicar Confesión</h2>
-                <div>
-                    <span class="text-">Titulo: </span>
-                    <input placeholder="Escribe un titulo..." class="input" name="titulo">
-                </div>
-                <div>
-                    <span class="text-">Descripcion:</span>
-                    <input id="confession-text" placeholder="Escribe tu confesión" required class="input" name="descripcion">
-                </div>
-            
-                <input type="file" name="file" multiple id="file-input" onchange="previewFiles()">
-                <div id="file-conten"></div>
-
-                <input type="submit" class="buttona" id="btn-submit"></input>
-            </form>
-            
+        <div class="des">
+            <p>Las confesiones serán completamente anónimas, ya que no requerimos ningún dato personal ni solicitamos la creación de una cuenta para preservar su privacidad de manera absoluta.</p>
         </div>
-    </section>
 
-    <footer class="footer">
-        <p>&copy; 2023 Confiesate Ccalamaquino</p>
-    </footer>
-    <script src="js/confesarme.js"></script>
-</body>
-</html>
+        <section>
+            <div class="main-content">
+                <form action="/confesion" method="post" enctype="multipart/form-data" class="confession-form">
+                    <h2 style="text-align: center; font-weight: bold; font-size: 1.5em;">Publicar Confesión</h2>
+                    <div>
+                        <span class="text-">Titulo: </span>
+                        <input placeholder="Escribe un titulo..." class="input" name="titulo">
+                    </div>
+                    <div>
+                        <span class="text-">Descripcion:</span>
+                        <input id="confession-text" placeholder="Escribe tu confesión" required class="input" name="descripcion">
+                    </div>
+                
+                    <input type="file" name="file" multiple id="image-input" onchange="previewImages()">
+                
+                    <div id="img-conten">
+                        
+                    </div>
+
+                    <input type="submit" class="buttona"></input>
+                </form>
+                
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>&copy; 2023 Confiesate Ccalamaquino</p>
+        </footer>
+
+        <script src="js/confesarme.js"></script>
+    </body>
+    </html>

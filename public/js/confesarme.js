@@ -1,110 +1,83 @@
-
-const descrip = document.querySelector('#confession-text')
-const btnSubmit = document.getElementById('btn-submit');
-
-if(!descrip.innerHTML == ''){
-
-    btnSubmit.addEventListener('click', e =>{
-        btnSubmit.style.display = 'none'
-    })
-}
-
-
 document.querySelector(".button").addEventListener("click", (e) => {
-    const confirmation = confirm("¿Estás seguro de que quieres volver a la página de inicio? Tu confesión no se guardará.");
-
-    if (confirmation) {
-        window.location.href = "/";
-    }
+  window.location.href = "/";
 });
 
-const form = document.querySelector('.confession-form');
+// FUNCIÓN DE RENDERIZAR IMÁGENES Y VIDEOS
+function previewImages() {
+  const input = document.getElementById("image-input");
+  const previewContainer = document.getElementById("img-conten");
+  previewContainer.innerHTML = "";
 
-btnSubmit.addEventListener('click', e => {
-    // Pregunta al usuario si realmente quiere publicar la confesión
-    const confirmation = confirm("¿Estás seguro de que quieres publicar esta confesión?");
+  if (input.files && input.files.length > 0) {
+    let currentIndex = 0;
+    const files = Array.from(input.files);
 
-    // Si el usuario confirma, envía el formulario
-    if (!confirmation) {
-        e.preventDefault(); // Cancela el envío del formulario si no hay confirmación
-    }
-});
+    // Pre-cargar todas las URLs de los archivos
+    const mediaElements = files.map((file) => {
+      const url = URL.createObjectURL(file);
 
-
-
-
-
-document.querySelector(".button").addEventListener("click", (e) =>{
-    window.location.href = "/"
-})
-
-// FUNCION DE RENDERIZAR ARCHIVOS (IMÁGENES O VIDEOS)
-function previewFiles() {
-    let input = document.getElementById('file-input');
-    let previewContainer = document.getElementById('file-conten');
-
-    previewContainer.innerHTML = '';
-
-    if (input.files && input.files.length > 0) {
-        for (let i = 0; i < input.files.length; i++) {
-            let file = input.files[i];
-            let filePreview = document.createElement('div');
-
-            // Verifica si el archivo es una imagen
-            if (file.type.startsWith('image')) {
-                let reader = new FileReader();
-                let imagePreview = document.createElement('img');
-
-                reader.onload = (function (image) {
-                    return function (e) {
-                        image.src = e.target.result;
-                    };
-                })(imagePreview);
-
-                reader.readAsDataURL(file);
-                imagePreview.classList.add("file-preview");
-                filePreview.appendChild(imagePreview);
-            }
-            // Verifica si el archivo es un video
-            else if (file.type.startsWith('video')) {
-                let videoPreview = document.createElement('video');
-                videoPreview.src = URL.createObjectURL(file);
-                videoPreview.classList.add("file-preview");
-                videoPreview.setAttribute("controls", "controls");
-                filePreview.appendChild(videoPreview);
-            }
-
-            previewContainer.appendChild(filePreview);
-        }
-    }
-}
-
-const fileInput = document.getElementById('file-input');
-fileInput.addEventListener('change', previewFiles);
-
-
-// Añadir informacion si el post tiene mas de una imagen
-function addInfo(post) {
-    const p = document.createElement('p');
-    p.innerHTML = "Dale click para ver mas imagenes";
-
-    const moreContainers = post.querySelectorAll('.more');
-
-    moreContainers.forEach(container => {
-        container.appendChild(p.cloneNode(true));
-        const firstImage = container.previousElementSibling.querySelector('img');
-        firstImage.style.display = 'block';
+      if (file.type.startsWith("image/")) {
+        const img = document.createElement("img");
+        img.src = url;
+        img.classList.add("carousel-image");
+        return img;
+      } else if (file.type.startsWith("video/")) {
+        const video = document.createElement("video");
+        video.src = url;
+        video.controls = true;
+        video.classList.add("carousel-video");
+        return video;
+      } else {
+        const msg = document.createElement("p");
+        msg.textContent = "Archivo no compatible: " + file.name;
+        return msg;
+      }
     });
+
+    // Contenedor principal
+    const mediaWrapper = document.createElement("div");
+    mediaWrapper.classList.add("carousel-media");
+    previewContainer.appendChild(mediaWrapper);
+
+    // Mostrar primer archivo
+    mediaWrapper.appendChild(mediaElements[currentIndex]);
+
+    // Botones del carrusel
+    const prevBtn = document.createElement("button");
+    const nextBtn = document.createElement("button");
+    prevBtn.type = "button";
+    nextBtn.type = "button";
+    prevBtn.innerHTML = "◀";
+    nextBtn.innerHTML = "▶";
+    prevBtn.classList.add("carousel-btn", "prev");
+    nextBtn.classList.add("carousel-btn", "next");
+    previewContainer.appendChild(prevBtn);
+    previewContainer.appendChild(nextBtn);
+
+    // Función para mostrar el siguiente/anterior
+    function showFile(index) {
+      // detener video si estaba reproduciéndose
+      const currentMedia = mediaElements[currentIndex];
+      if (currentMedia.tagName === "VIDEO") {
+        currentMedia.pause();
+        currentMedia.currentTime = 0;
+      }
+
+      mediaWrapper.innerHTML = "";
+      mediaWrapper.appendChild(mediaElements[index]);
+    }
+
+    prevBtn.onclick = () => {
+      currentIndex = (currentIndex - 1 + files.length) % files.length;
+      showFile(currentIndex);
+    };
+
+    nextBtn.onclick = () => {
+      currentIndex = (currentIndex + 1) % files.length;
+      showFile(currentIndex);
+    };
+  }
 }
 
-const posts = document.querySelectorAll('.post');
-posts.forEach(post => {
-    const imageContainer = post.querySelector('.image-container');
-    const images = imageContainer.querySelectorAll('img');
 
-    if (images.length > 1) {
-        addInfo(post);
-    }
-});
 previewImages();
-

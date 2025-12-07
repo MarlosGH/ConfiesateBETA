@@ -12,13 +12,13 @@ section{
     display: flex;
     justify-content: center;
 }
-.img-post{
-    border-radius: 10px;
-    display: none;
-    transition: opacity 1s ease-in-out;
-    transition: all .3s;
+.img-post {
     max-width: 100%;
-    min-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
 }
 .img-post.active {
     display: block;
@@ -213,20 +213,135 @@ main{
     display: flex;
     flex-wrap: wrap;
 }
+/* ---------------------- */
+/* Ocultamos todo por defecto */
+.carousel .img-post,
+.carousel video {
+  display: none;
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: opacity 0.4s ease, transform 0.3s ease;
+}
 
-.img-post {
+/* Solo el elemento activo (imagen o video) se muestra */
+.carousel .img-post.active,
+.carousel video.active {
+  display: block;
+  opacity: 1;
+  transform: scale(1);
+}
+
+
+
+/* ------------------------ */
+
+.carousel {
+    position: relative;
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    background-color: #00000015;
+    backdrop-filter: blur(4px);
+  }
+  
+  .img-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .img-post,
+  .carousel video {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out, transform 0.4s ease-in-out;
+    transform: scale(0.98);
     display: none;
   }
   
-  .img-post.active {
+  .img-post.active,
+  .carousel video.active {
     display: block;
+    opacity: 1;
+    transform: scale(1);
   }
+  
+  .fade-in {
+    animation: fadeIn 0.6s ease;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* Botones del carrusel */
+  #prev, #next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 8px 15px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+  }
+  
+  #prev:hover, #next:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
+  #prev { left: 10px; }
+  #next { right: 10px; }
 
-  .carousel video {
+  .fullscreen-modal {
     display: none;
+    position: fixed;
+    z-index: 9999;
+    padding-top: 40px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    justify-content: center;
+    align-items: center;
+}
+.fullscreen-modal img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
 }
 
-/* Añadido: Estilo para mostrar solo el video actual */
-.carousel video.active {
-    display: block;
+.fullscreen-modal .close-modal {
+    position: absolute;
+    top: 15px;
+    right: 30px;
+    color: white;
+    font-size: 40px;
+    cursor: pointer;
 }
+

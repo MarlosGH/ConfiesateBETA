@@ -1,53 +1,87 @@
-document.querySelector('.button').addEventListener('click', () => {
-  window.location.href = '/';
-});
+// Botón para volver al inicio
+const backButton = document.querySelector('.button');
+if (backButton) {
+  backButton.addEventListener('click', () => {
+    window.location.href = '/';
+  });
+}
 
-let images = Array.from(document.querySelectorAll('.img-post'));
+// Selección de todos los elementos del carrusel (imágenes y videos)
+const mediaElements = Array.from(document.querySelectorAll('.img-post, .carousel video'));
+const prevBtn = document.getElementById('prev');
+const nextBtn = document.getElementById('next');
 let index = 0;
 
-if (images.length >= 2) {
-  document.getElementById('next').classList.add('visible');
-  document.getElementById('prev').classList.add('visible');
-}
+// Si no hay ningún medio, ocultamos el main
+if (mediaElements.length === 0) {
+  const main = document.querySelector('main');
+  if (main) main.style.display = 'none';
+} else {
+  // Mostrar el primer elemento
+  mediaElements[0].classList.add('active');
 
-document.getElementById('next').addEventListener('click', function () {
-  hideAllMedia();
-  index = (index + 1) % images.length;
-  showCurrentMedia();
-});
+  // Mostrar botones solo si hay más de un elemento
+  if (mediaElements.length > 1) {
+    prevBtn.classList.add('visible');
+    nextBtn.classList.add('visible');
+  } else {
+    prevBtn.style.display = 'none';
+    nextBtn.style.display = 'none';
+  }
 
-document.getElementById('prev').addEventListener('click', function () {
-  hideAllMedia();
-  index = (index - 1 + images.length) % images.length;
-  showCurrentMedia();
-});
+  // Función para actualizar el elemento activo
+  function showMedia(newIndex) {
+    mediaElements[index].classList.remove('active', 'fade-in');
+    index = (newIndex + mediaElements.length) % mediaElements.length;
+    mediaElements[index].classList.add('active', 'fade-in');
+  }
 
+  // Botones de navegación
+  nextBtn.addEventListener('click', () => {
+    // Si el actual es video, lo pausamos antes de pasar al siguiente
+    if (mediaElements[index].tagName === 'VIDEO') {
+      mediaElements[index].pause();
+    }
+    showMedia(index + 1);
+  });
 
-function hideAllMedia() {
-  images.forEach(img => {
-    img.classList.remove('active');
+  prevBtn.addEventListener('click', () => {
+    if (mediaElements[index].tagName === 'VIDEO') {
+      mediaElements[index].pause();
+    }
+    showMedia(index - 1);
+  });
+
+  // Soporte con teclado (← y →)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') {
+      if (mediaElements[index].tagName === 'VIDEO') mediaElements[index].pause();
+      showMedia(index + 1);
+    }
+    if (e.key === 'ArrowLeft') {
+      if (mediaElements[index].tagName === 'VIDEO') mediaElements[index].pause();
+      showMedia(index - 1);
+    }
   });
 }
 
-function showCurrentMedia() {
-  images[index].classList.add('active');
-}
+// ------- PANTALLA COMPLETA SOLO PARA IMÁGENES -------
+const fullscreenableImages = document.querySelectorAll('.fullscreenable');
+const modal = document.getElementById('fullscreenModal');
+const modalImg = document.getElementById('fullscreenImage');
+const closeModal = document.querySelector('.close-modal');
 
-let imgs = document.querySelectorAll('.img-post');
-
-if (imgs.length == 0) {
-  document.querySelector('main').style.display = 'none';
-} else if (imgs.length <= 1) {
-  document.getElementById('next').style.display = 'none';
-  document.getElementById('prev').style.display = 'none';
-}
-
-images[0].classList.add('active');
-
-document.querySelectorAll('.img-post').forEach(img => {
+fullscreenableImages.forEach(img => {
   img.addEventListener('click', () => {
-    const src = img.getAttribute('src');
-
-    window.open(`https://confiesatebeta-production.up.railway.app${src}`);
+    modal.style.display = 'flex';
+    modalImg.src = img.src;
   });
+});
+
+closeModal.addEventListener('click', () => {
+  modal.style.display = 'none';
+});
+
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) modal.style.display = 'none';
 });
