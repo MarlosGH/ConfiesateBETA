@@ -1,9 +1,5 @@
 # Archivos temporales
 *~
-
-# Archivos de configuración local
-.env
-
 # Dependencias de Node.js
 node_modules/
 .vscode
