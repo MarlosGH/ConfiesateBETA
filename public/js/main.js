@@ -42,6 +42,7 @@ let currentPage = 1;
 const postsContainer = document.getElementById('posts-container');
 const loadMoreButton = document.getElementById('load-more-button');
 
+
 loadMoreButton.addEventListener('click', async () => {
   currentPage++;
 
@@ -57,29 +58,48 @@ loadMoreButton.addEventListener('click', async () => {
     }
 
     nuevasConfesiones.forEach(confesion => {
-      const folderPath = `/uploads/${confesion.carpeta}`;
-      const mediaFiles = JSON.parse(confesion.imagenes);
-      const firstMediaFile = mediaFiles[0];
+
+      // AHORA SI: imágenes reales de Cloudinary
+      const mediaFiles = confesion.imagenes;
+      const firstMediaFile = mediaFiles?.[0] ?? null;
 
       const postElement = document.createElement('div');
       postElement.classList.add('post');
 
       postElement.innerHTML = `
         <div class="titles">
-          <h2 class="title-post"><a href="/post/${confesion.id}" class="a">${confesion.titulo}</a></h2>
+          <h2 class="title-post">
+            <a href="/post/${confesion._id}" class="a">${confesion.titulo}</a>
+          </h2>
           <p class="descripcion-post">${confesion.descripcion}</p>
         </div>
+
         <div class="image-container">
-          ${firstMediaFile && firstMediaFile.match(/\.(mp4|webm|ogg|mkv)$/i)
-            ? `<a href="/post/${confesion.id}"><video controls><source src="${folderPath}/${firstMediaFile}" type="video/mp4"></video></a>`
-            : `<a href="/post/${confesion.id}" class="img-a"><img src="${folderPath}/${firstMediaFile}" class="img-post" alt=""></a>`
+          ${
+            firstMediaFile
+              ? (firstMediaFile.match(/\.(mp4|webm|ogg|mkv)$/i)
+                ? `<a href="/post/${confesion._id}">
+                     <video controls class="img-post">
+                       <source src="${firstMediaFile}" type="video/mp4">
+                     </video>
+                   </a>`
+                : `<a href="/post/${confesion._id}" class="img-a">
+                     <img src="${firstMediaFile}" class="img-post" alt="Imagen del post">
+                   </a>`)
+              : ""
           }
         </div>
+
         <div class="opciones">
-          <a href="/post/${confesion.id}" style="text-decoration: none; color: #5f5f5f !important;">
-            <div class="option_conten comment-conten"><span class="span-comment">Comentarios</span></div>
+          <a href="/post/${confesion._id}" style="text-decoration: none; color: #5f5f5f !important;">
+            <div class="option_conten comment-conten">
+              <span class="span-comment">Comentarios</span>
+            </div>
           </a>
-          <div class="option_conten heart-conten"><span class="span-heart">Me gusta</span></div>
+
+          <div class="option_conten heart-conten">
+            <span class="span-heart">Me gusta</span>
+          </div>
         </div>
       `;
 
