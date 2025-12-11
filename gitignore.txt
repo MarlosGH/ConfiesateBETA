@@ -1,0 +1,6 @@
+# Archivos temporales
+*~
+
+# Dependencias de Node.js
+node_modules/
+.vscode

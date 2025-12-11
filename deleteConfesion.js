@@ -1,21 +1,43 @@
 // deleteConfesion.js
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./prv/db/confiesate.db'); // ajusta el nombre de tu base de datos
+const mongoose = require("mongoose");
+const Confesion = require("./models/confesionModel");
+const Comentario = require("./models/comentarioModel");
+const Reaccion = require("./models/reaccionModel");
 
-const id = process.argv[2]; // El ID se pasa como argumento en la consola
+const MONGODB_URI = "mongodb+srv://machucacarlos833_db_user:o5CVx8uQCDxP9aoF@confiesate-cluster.oupnhpi.mongodb.net/confiesateDB?retryWrites=true&w=majority&appName=confiesate-cluster";
+
+const id = process.argv[2];
 
 if (!id) {
-  console.log("❌ Debes proporcionar el ID de la confesión que quieres eliminar.");
+  console.log("❌ Debes proporcionar un ID de confesión para eliminar.");
   process.exit(1);
 }
 
-db.run('DELETE FROM confesiones WHERE id = ?', [id], function(err) {
-  if (err) {
-    console.error('⚠️ Error al eliminar la confesión:', err.message);
-  } else if (this.changes === 0) {
-    console.log('⚠️ No se encontró ninguna confesión con ese ID.');
-  } else {
-    console.log(`✅ Confesión con ID ${id} eliminada correctamente.`);
+async function eliminarConfesion() {
+  try {
+    await mongoose.connect(MONGODB_URI);
+    console.log("📌 Conectado a MongoDB.");
+
+    const deletedConfesion = await Confesion.findByIdAndDelete(id);
+
+    if (!deletedConfesion) {
+      console.log("⚠️ No se encontró ninguna confesión con ese ID.");
+      return process.exit(0);
+    }
+
+    // Eliminar comentarios asociados
+    await Comentario.deleteMany({ postId: id });
+
+    // Eliminar reacciones asociadas
+    await Reaccion.deleteOne({ postId: id });
+
+    console.log("✅ Confesión y datos relacionados eliminados correctamente.");
+    process.exit(0);
+
+  } catch (error) {
+    console.error("❌ Error eliminando:", error);
+    process.exit(1);
   }
-  db.close();
-});
+}
+
+eliminarConfesion();

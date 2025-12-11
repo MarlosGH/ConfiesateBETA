@@ -1,210 +1,199 @@
-// Exportar modulos
+// MÓDULOS
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
-const db = require('./prv/db/database'); // Importar base de datos
 const bodyParser = require('body-parser');
+require("dotenv").config();
+const { cloudinary, storage } = require("./prv/cloud/cloudinary");
+const multerCloud = require("multer");
 
-// Inicializaciones
+// Conexión a MongoDB
+const connectDB = require("./prv/db/database");
+connectDB();
+
+// Modelos MongoDB
+const Confesion = require("./prv/db/models/confesionModel");
+const Comentario = require("./prv/db/models/comentarioModel");
+const Reaccion = require("./prv/db/models/reaccionModel");
+
+// Inicialización
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Crear carpeta uploads si no existe
 const destinationFolder = path.join(__dirname, 'uploads');
 fs.mkdirSync(destinationFolder, { recursive: true });
 
-// Multer
+
 let folderName = null;
 
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (!folderName) {
-      folderName = generateFolderName();
-    }
-    const destinationFolder = path.join(__dirname, 'uploads', folderName);
-    fs.mkdirSync(destinationFolder, { recursive: true });
-    cb(null, destinationFolder);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const filename = `${uniqueSuffix}${path.extname(file.originalname)}`;
-    cb(null, filename);
-  }
+// Middleware para asignar folderName al request
+app.use((req, res, next) => {
+  req.folderName = folderName;
+  next();
 });
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static("public"));
+// MULTER CLOUDINARY
+const upload = multerCloud({ storage });
 
-const upload = multer({ storage: storage });
-
-// Middleware para analizar el cuerpo de las solicitudes
+// CONFIGURACIÓN
 app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/prv', express.static(path.join(__dirname, 'prv')));
-app.use(bodyParser.json());
 
-// Ruta para mostrar el formulario de publicación
+// FORMULARIO PARA CONFESAR
 app.get('/confesarme', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'confesarme.html'));
 });
 
-// Obtener la cantidad total de confesiones
-app.get('/obtenerTotalConfesiones', (req, res) => {
-  db.get('SELECT count(id) as totalConfesiones FROM confesiones', (err, row) => {
-    if (err) {
-      console.error('Error al obtener la cantidad total de confesiones:', err);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
-    res.json({ totalConfesiones: row.totalConfesiones });
-  });
-});
-
-
-
-
-// Ruta para manejar la publicación del formulario
-app.post('/confesion', upload.array('file'), (req, res) => {
-  const descripcion = req.body.descripcion;
-  const titulo = req.body.titulo;
-  const imagenes = req.files ? req.files.map(file => file.filename) : [];
-  const carpeta = req.files && req.files.length > 0 ? path.basename(path.dirname(req.files[0].path)) : null;
-  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress; // ✅ capturar IP
-  
-  const stmt = db.prepare('INSERT INTO confesiones (titulo, descripcion, imagenes, carpeta, ip) VALUES (?, ?, ?, ?, ?)');
-  stmt.run(titulo, descripcion, JSON.stringify(imagenes), carpeta, ip, (err) => {
-    if (err) {
-      console.error('Error al insertar confesión en la base de datos:', err);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
-    res.redirect('/');
-  });
-  stmt.finalize();
-  folderName = null;
-});
-
-
-
-
-// Ruta para manejar la publicación del formulario y agregar comentarios
-app.post('/confesion/:postId/comentario', (req, res) => {
-  const postId = req.params.postId;
-  const contenido = req.body.contenido;
-  if(!contenido == ''){
-    const stmt = db.prepare('INSERT INTO comentarios(postId, text) VALUES (?, ?)');
-    stmt.run(postId, contenido, (err) => {
-      if (err) {
-        console.error('Error al insertar comentario en la base de datos:', err);
-        return res.status(500).json({ error: 'Internal Server Error' });
-      }
-      res.redirect(`/post/${postId}`);
-    });
-    stmt.finalize();
+// CANTIDAD TOTAL DE CONFESIONES
+app.get('/obtenerTotalConfesiones', async (req, res) => {
+  try {
+    const total = await Confesion.countDocuments();
+    res.json({ totalConfesiones: total });
+  } catch (err) {
+    console.error("Error al contar confesiones:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// Ruta para mostrar la página de un post y sus comentarios
-app.get('/post/:postId', (req, res) => {
-  const postId = req.params.postId;
+// PUBLICAR UNA CONFESIÓN
+app.post('/confesion', upload.array('file'), async (req, res) => {
+  try {
+    const { titulo, descripcion } = req.body;
+    const imagenes = req.files.map(file => file.path); // URL de Cloudinary
+    const carpeta = `confesiones/${folderName}`;
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
-  const postStmt = db.prepare('SELECT * FROM confesiones WHERE id = ?');
-  postStmt.get(postId, (err, post) => {
-    if (err) {
-      console.error('Error al obtener el post desde SQLite:', err);
-      return res.status(500).send('Internal Server Error');
-    }
-
-    if (!post) {
-      return res.status(404).send('Post not found');
-    }
-
-    const comentariosStmt = db.prepare('SELECT * FROM comentarios WHERE postId = ? ORDER BY id DESC');
-    comentariosStmt.all(postId, (err, comentarios) => {
-      if (err) {
-        console.error('Error al obtener comentarios desde SQLite:', err);
-        return res.status(500).send('Internal Server Error');
-      }
-      res.render('post.ejs', { post: post, comentarios: comentarios });
+    const nuevaConfesion = await Confesion.create({
+      titulo,
+      descripcion,
+      carpeta,
+      imagenes,
+      ip
     });
-  });
+
+    // Crear registro de reacciones para este post
+    await Reaccion.create({ post_id: nuevaConfesion._id });
+
+    folderName = null;
+
+    res.redirect('/');
+  } catch (err) {
+    console.error("Error creando confesión:", err);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
+// AGREGAR COMENTARIO
+app.post('/confesion/:postId/comentario', async (req, res) => {
+  try {
+    const { contenido } = req.body;
+    const { postId } = req.params;
+
+    if (!contenido.trim()) return res.redirect(`/post/${postId}`);
+
+    await Comentario.create({
+      postId,
+      text: contenido
+    });
+
+    res.redirect(`/post/${postId}`);
+  } catch (err) {
+    console.error("Error agregando comentario:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// VER UN POST
+app.get('/post/:postId', async (req, res) => {
+  try {
+    const { postId } = req.params;
+
+    const post = await Confesion.findById(postId);
+    if (!post) return res.status(404).send("Post not found");
+
+    const comentarios = await Comentario.find({ postId }).sort({ createdAt: -1 });
+
+    res.render('post.ejs', { post, comentarios });
+  } catch (err) {
+    console.error("Error mostrando post:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// PAGINACIÓN PRINCIPAL
 const pageSize = 5;
 
-// Ruta para mostrar la página principal con las confesiones
-app.get('/', (req, res) => {
-  // Obtener el número de página desde la consulta, si no se proporciona, usar la página 1
-  const page = req.query.page || 1;
-
-  // Calcular el índice de inicio basado en el tamaño de página y la página actual
-  const startIndex = (page - 1) * pageSize;
-
-  // Consulta para obtener las confesiones desde la base de datos, limitadas por el tamaño de página y el índice de inicio
-  db.all('SELECT * FROM confesiones ORDER BY id DESC LIMIT ? OFFSET ?', [pageSize, startIndex], (err, rows) => {
-    if (err) {
-      console.error('Error al obtener confesiones desde SQLite:', err);
-      return res.status(500).send('Internal Server Error');
-    }
-  
-    res.render('index.ejs', { confesiones: rows, basePath: '/prv/uploads' });
-  });  
-});
-
-// Ruta para cargar más confesiones
-app.get('/load-more', (req, res) => {
-  const page = req.query.page || 1;
-  const pageSize = 5; // Tamaño de la página
-
-  // Calcular el índice de inicio basado en el tamaño de página y la página actual
-  const startIndex = (page - 1) * pageSize;
-
-  // Consulta para obtener las confesiones desde la base de datos, limitadas por el tamaño de página y el índice de inicio
-  db.all('SELECT * FROM confesiones ORDER BY id DESC LIMIT ? OFFSET ?', [pageSize, startIndex], (err, rows) => {
-    if (err) {
-      console.error('Error al obtener confesiones desde SQLite:', err);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
-
-    res.json({ confesiones: rows });
-  });
-});
-
-
-app.post('/reaccionar/:postId/:reactionType', async (req, res) => {
+app.get('/', async (req, res) => {
   try {
-    // Obtén postId y reactionType de req.params
-    const { postId, reactionType } = req.params;
+    const page = Number(req.query.page) || 1;
 
-    // Verifica que postId sea un número antes de usarlo
-    if (isNaN(postId)) {
-      return res.status(400).json({ error: 'El postId no es un número válido.' });
-    }
+    const confesiones = await Confesion.find()
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
 
-    // Usar un marcador de posición para evitar problemas con el nombre de la columna
-    const result = await db.run(`UPDATE reacciones SET ${reactionType} = ${reactionType} + 1 WHERE post_id = ?`, [postId]);
-
-    if (result && result.changes > 0) {
-      const updatedReactions = await getReactions(postId);
-      res.json(updatedReactions);
-    } else {
-      res.status(400).json({ error: 'No se pudo actualizar la reacción.' });
-    }
-  } catch (error) {
-    console.error('Error al manejar la reacción:', error);
-    res.status(500).json({ error: 'Error interno del servidor.' });
+    res.render('index.ejs', { confesiones, basePath: '/uploads' });
+  } catch (err) {
+    console.error("Error cargando index:", err);
+    res.status(500).send("Internal Server Error");
   }
 });
 
-async function getReactions(postId) {
-  return await db.get(`SELECT * FROM reacciones WHERE post_id = ?`, [postId]);
-}
+// LOAD-MORE
+app.get('/load-more', async (req, res) => {
+  try {
+    const page = Number(req.query.page) || 1;
 
+    const confesiones = await Confesion.find()
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
 
-// Inicia el servidor en el puerto especificado
+    res.json({ confesiones });
+  } catch (err) {
+    console.error("Error cargando más:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// REACCIONAR
+app.post('/reaccionar/:postId/:reactionType', async (req, res) => {
+  try {
+    const { postId, reactionType } = req.params;
+
+    const valid = ["me_gusta", "me_divierte", "me_entristece", "diablo", "lloro"];
+    if (!valid.includes(reactionType)) {
+      return res.status(400).json({ error: "Reacción inválida" });
+    }
+
+    const updated = await Reaccion.findOneAndUpdate(
+      { post_id: postId },
+      { $inc: { [reactionType]: 1 } },
+      { new: true }
+    );
+
+    res.json(updated);
+  } catch (err) {
+    console.error("Error al reaccionar:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// INICIAR SERVIDOR
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);
 });
 
+// GENERAR NOMBRE DE CARPETA DE IMÁGENES
 function generateFolderName() {
-  const currentDate = new Date();
-  return `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}-${currentDate.getHours()}-${currentDate.getMinutes()}-${currentDate.getSeconds()}-${currentDate.getMilliseconds()}`;
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}-${d.getHours()}-${d.getMinutes()}-${d.getSeconds()}`;
 }
